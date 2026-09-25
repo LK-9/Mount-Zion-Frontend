@@ -5,32 +5,26 @@ function checkSuperAuth() {
     localStorage.getItem(STORAGE_KEYS.superAuth) === "1" ||
     sessionStorage.getItem("mzhl-super-auth") === "1" ||
     localStorage.getItem("mzhl-super-auth") === "1";
-  const loginView = document.getElementById("super-login-view");
-  const appView = document.getElementById("super-app-view");
+  const currentPath = (
+    window.location.pathname.split("/").pop() || ""
+  ).toLowerCase();
+  const isLoginPage =
+    currentPath === "super-admin-login.html" ||
+    currentPath === "super-admin-login";
 
   if (isAuth) {
-    if (loginView) {
-      loginView.style.display = "none";
-      loginView.style.setProperty("display", "none", "important");
-    }
-    if (appView) {
-      appView.style.display = "flex";
-      appView.style.setProperty("display", "flex", "important");
+    if (isLoginPage) {
+      window.location.replace("super-admin.html");
+      return;
     }
     document.documentElement.classList.remove("super-logged-out");
     document.documentElement.classList.add("super-logged-in");
   } else {
     document.documentElement.classList.remove("super-logged-in");
     document.documentElement.classList.add("super-logged-out");
-    if (loginView) {
-      loginView.style.display = "flex";
-      loginView.style.setProperty("display", "flex", "important");
-      if (appView) {
-        appView.style.display = "none";
-        appView.style.setProperty("display", "none", "important");
-      }
-    } else {
-      window.location.replace("super-admin.html");
+    if (!isLoginPage) {
+      window.location.replace("super-admin-login.html");
+      return;
     }
   }
 }
@@ -44,37 +38,7 @@ function superAdminSignOut() {
   document.documentElement.classList.remove("super-logged-in");
   document.documentElement.classList.add("super-logged-out");
 
-  const loginView = document.getElementById("super-login-view");
-  const appView = document.getElementById("super-app-view");
-
-  if (loginView && appView) {
-    appView.style.display = "none";
-    loginView.style.display = "flex";
-    appView.style.setProperty("display", "none", "important");
-    loginView.style.setProperty("display", "flex", "important");
-    const pInput = document.getElementById("super-pass-input");
-    if (pInput) pInput.value = "";
-    const err = document.getElementById("super-login-error");
-    if (err) err.classList.add("hidden");
-    const sidebar = document.getElementById("super-sidebar");
-    const backdrop = document.getElementById("super-sidebar-backdrop");
-    if (sidebar) sidebar.classList.add("-translate-x-full");
-    if (backdrop) backdrop.classList.add("hidden");
-  }
-
-  const currentFile = (
-    window.location.pathname.split("/").pop() || ""
-  ).toLowerCase();
-  const isRootSuper =
-    currentFile === "super-admin.html" ||
-    currentFile === "super-admin" ||
-    (currentFile === "" && loginView);
-
-  if (!isRootSuper) {
-    window.location.replace("super-admin.html");
-  } else {
-    window.location.reload();
-  }
+  window.location.replace("super-admin-login.html");
 }
 window.superAdminSignOut = superAdminSignOut;
 
@@ -98,13 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem(STORAGE_KEYS.superAuth, "1");
         sessionStorage.setItem("mzhl-super-auth", "1");
         localStorage.setItem("mzhl-super-auth", "1");
-        document.documentElement.classList.remove("super-logged-out");
-        document.documentElement.classList.add("super-logged-in");
         if (err) err.classList.add("hidden");
-        checkSuperAuth();
-        if (typeof initSuperDashboard === "function") {
-          initSuperDashboard();
-        }
+        window.location.replace("super-admin.html");
       } else {
         if (err) err.classList.remove("hidden");
       }

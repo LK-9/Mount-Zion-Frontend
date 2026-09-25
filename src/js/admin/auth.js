@@ -9,32 +9,25 @@ function checkAdminAuth() {
     localStorage.getItem(STORAGE_KEYS.auth) === "1" ||
     sessionStorage.getItem("mzhl-admin-auth") === "1" ||
     localStorage.getItem("mzhl-admin-auth") === "1";
-  const loginView = document.getElementById("admin-login-view");
-  const appView = document.getElementById("admin-app-view");
+  const currentPath = (
+    window.location.pathname.split("/").pop() || ""
+  ).toLowerCase();
+  const isLoginPage =
+    currentPath === "admin-login.html" || currentPath === "admin-login";
 
   if (isAuth) {
-    if (loginView) {
-      loginView.style.display = "none";
-      loginView.style.setProperty("display", "none", "important");
-    }
-    if (appView) {
-      appView.style.display = "flex";
-      appView.style.setProperty("display", "flex", "important");
+    if (isLoginPage) {
+      window.location.replace("admin.html");
+      return;
     }
     document.documentElement.classList.remove("admin-logged-out");
     document.documentElement.classList.add("admin-logged-in");
   } else {
     document.documentElement.classList.remove("admin-logged-in");
     document.documentElement.classList.add("admin-logged-out");
-    if (loginView) {
-      loginView.style.display = "flex";
-      loginView.style.setProperty("display", "flex", "important");
-      if (appView) {
-        appView.style.display = "none";
-        appView.style.setProperty("display", "none", "important");
-      }
-    } else {
-      window.location.replace("admin.html");
+    if (!isLoginPage) {
+      window.location.replace("admin-login.html");
+      return;
     }
   }
 }
@@ -65,37 +58,7 @@ function adminSignOut() {
   document.documentElement.classList.remove("admin-logged-in");
   document.documentElement.classList.add("admin-logged-out");
 
-  const loginView = document.getElementById("admin-login-view");
-  const appView = document.getElementById("admin-app-view");
-
-  if (loginView && appView) {
-    appView.style.display = "none";
-    loginView.style.display = "flex";
-    appView.style.setProperty("display", "none", "important");
-    loginView.style.setProperty("display", "flex", "important");
-    const passInput = document.getElementById("login-password");
-    if (passInput) passInput.value = "";
-    const err = document.getElementById("login-error-alert");
-    if (err) err.classList.add("hidden");
-    const sidebar = document.getElementById("admin-sidebar");
-    const backdrop = document.getElementById("admin-sidebar-backdrop");
-    if (sidebar) sidebar.classList.add("-translate-x-full");
-    if (backdrop) backdrop.classList.add("hidden");
-  }
-
-  const currentFile = (
-    window.location.pathname.split("/").pop() || ""
-  ).toLowerCase();
-  const isRootAdmin =
-    currentFile === "admin.html" ||
-    currentFile === "admin" ||
-    (currentFile === "" && loginView);
-
-  if (!isRootAdmin) {
-    window.location.replace("admin.html");
-  } else {
-    window.location.reload();
-  }
+  window.location.replace("admin-login.html");
 }
 window.adminSignOut = adminSignOut;
 
@@ -157,11 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
           `${matchedStaff.name} (${matchedStaff.role}) logged in`,
         );
         if (err) err.classList.add("hidden");
-        checkAdminAuth();
-        syncLoggedInStaffUI();
-        if (typeof renderStaffDashboard === "function") {
-          renderStaffDashboard();
-        }
+        window.location.replace("admin.html");
       } else if (isDemoFallback) {
         const defaultUser = staffList.find((s) =>
           s.email?.toLowerCase().includes("tamuno"),
@@ -177,11 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.setItem("mzhl-admin-auth", "1");
         localStorage.setItem("mzhl-admin-auth", "1");
         if (err) err.classList.add("hidden");
-        checkAdminAuth();
-        syncLoggedInStaffUI();
-        if (typeof renderStaffDashboard === "function") {
-          renderStaffDashboard();
-        }
+        window.location.replace("admin.html");
       } else {
         if (err) err.classList.remove("hidden");
       }
