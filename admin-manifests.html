@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Truck Manifests — Mount Zion Haulage & Logistics</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/x-icon" href="./src/images/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./src/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./src/images/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./src/images/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link href="./src/output.css" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("mzhl-theme");
+          if (!t) {
+            t = window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          }
+          if (t === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
+          var a =
+            sessionStorage.getItem("mzhl-admin-auth") === "1" ||
+            localStorage.getItem("mzhl-admin-auth") === "1";
+          if (!a) {
+            window.location.replace("admin.html");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body
+    class="min-h-screen bg-background text-foreground antialiased selection:bg-red-500 selection:text-white font-poppins transition-colors duration-200"
+  >
+    <div
+      id="admin-app-view"
+      class="min-h-screen flex flex-col lg:flex-row bg-background"
+    >
+      <!-- Mobile Backdrop -->
+      <div
+        id="admin-sidebar-backdrop"
+        class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden"
+      ></div>
+
+      <!-- Sidebar Navigation -->
+      <aside
+        id="admin-sidebar"
+        class="fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-border flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:shrink-0"
+      >
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-border">
+          <div
+            class="h-9 w-9 rounded-xl bg-white border border-border/80 dark:border-white/15 shadow-sm flex items-center justify-center p-1 shrink-0"
+          >
+            <img
+              src="./src/images/apple-touch-icon.png"
+              alt="Mount Zion Logo"
+              class="h-full w-full object-contain"
+            />
+          </div>
+          <div class="min-w-0">
+            <h2
+              class="font-bold text-sm text-foreground truncate leading-tight"
+            >
+              Mount Zion
+            </h2>
+            <span
+              class="text-[11px] uppercase tracking-wider text-red-600 dark:text-red-400 font-semibold"
+              >Staff Console</span
+            >
+          </div>
+        </div>
+
+        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto">
+          <a
+            href="admin.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+                <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+                <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+                <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+              </svg>
+              <span>Dashboard</span>
+            </div>
+          </a>
+
+          <a
+            href="admin-manifests.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-white bg-primary shadow-glow"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>Truck Manifests</span>
+            </div>
+            <span
+              id="badge-manifests-count"
+              class="tab-badge px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/25 text-white"
+              >0</span
+            >
+          </a>
+
+          <a
+            href="admin-quotes.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+                ></path>
+                <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                <path d="M10 9H8"></path>
+                <path d="M16 13H8"></path>
+                <path d="M16 17H8"></path>
+              </svg>
+              <span>Quote Requests</span>
+            </div>
+            <span
+              id="badge-quotes-count"
+              class="tab-badge px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300"
+              >0</span
+            >
+          </a>
+
+          <a
+            href="admin-messages.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                ></path>
+              </svg>
+              <span>Inquiries</span>
+            </div>
+            <span
+              id="badge-messages-count"
+              class="tab-badge px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300"
+              >0</span
+            >
+          </a>
+        </nav>
+
+        <div class="p-4 border-t border-border space-y-2">
+          <a
+            href="index.html"
+            target="_blank"
+            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M15 3h6v6"></path>
+              <path d="M10 14 21 3"></path>
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+            </svg>
+            <span>Public Website</span>
+          </a>
+
+          <button
+            type="button"
+            id="admin-signout-btn"
+            onclick="adminSignOut()"
+            class="admin-signout-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" x2="9" y1="12" y2="12"></line>
+            </svg>
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col min-w-0">
+        <header
+          class="min-h-16 h-auto py-2 sm:py-0 sm:h-16 bg-background/95 backdrop-blur border-b border-border flex items-center justify-between px-3 sm:px-6 lg:px-8 sticky top-0 z-20 gap-2 sm:gap-4"
+        >
+          <div
+            class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-1 sm:mr-2"
+          >
+            <button
+              type="button"
+              id="admin-menu-toggle"
+              class="lg:hidden p-1.5 sm:p-2 rounded-lg border border-border text-foreground hover:bg-surface cursor-pointer shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="4" x2="20" y1="12" y2="12"></line>
+                <line x1="4" x2="20" y1="6" y2="6"></line>
+                <line x1="4" x2="20" y1="18" y2="18"></line>
+              </svg>
+            </button>
+            <h2
+              class="font-bold text-xs sm:text-base lg:text-lg text-foreground font-poppins leading-tight"
+            >
+              Truck<br class="sm:hidden" />
+              Manifests
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <button
+              type="button"
+              class="theme-toggle-btn p-1.5 sm:p-2 rounded-lg border border-border bg-surface text-foreground hover:bg-muted transition-colors cursor-pointer shrink-0"
+              aria-label="Toggle Theme"
+            >
+              <span class="theme-icon-sun hidden"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </span>
+              <span class="theme-icon-moon"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+                  ></path>
+                </svg>
+              </span>
+            </button>
+
+            <div
+              class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-xs font-semibold shrink-0"
+            >
+              <span
+                class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"
+              ></span>
+              <span id="logged-staff-name" class="text-foreground font-bold"
+                >Tamuno Briggs
+                <span class="text-xs font-normal text-muted-foreground"
+                  >(Port Harcourt)</span
+                ></span
+              >
+            </div>
+          </div>
+        </header>
+
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
+          <div>
+            <h1 class="text-2xl font-bold font-poppins text-foreground">
+              Truck Manifests
+            </h1>
+            <p class="text-xs sm:text-sm text-muted-foreground">
+              View and inspect manifests for each container truck traveling
+              between Lagos and PHC.
+            </p>
+          </div>
+
+          <!-- Period Filter Toolbar (Day / Week / Month / Year) -->
+          <div id="staff-manifests-period-toolbar"></div>
+
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              id="manifests-search-input"
+              placeholder="Search by Manifest ID, Truck Plate, Driver, or Cargo..."
+              class="flex-1 px-4 py-2.5 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+            <select
+              id="manifests-status-filter"
+              class="px-4 py-2.5 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+            >
+              <option value="ALL">All Manifest Statuses</option>
+              <option value="Loading">Loading</option>
+              <option value="In Transit">In Transit</option>
+              <option value="Arrived D-Line PHC">Arrived in PHC</option>
+              <option value="Offloading">Offloading</option>
+              <option value="Offloaded">Offloaded</option>
+            </select>
+          </div>
+
+          <div
+            class="rounded-2xl border border-border bg-card overflow-hidden shadow-sm"
+          >
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead
+                  class="bg-surface text-xs uppercase text-muted-foreground border-b border-border"
+                >
+                  <tr>
+                    <th class="p-4 font-semibold">Manifest ID</th>
+                    <th class="p-4 font-semibold">Truck & Container</th>
+                    <th class="p-4 font-semibold">Driver & Contact</th>
+                    <th class="p-4 font-semibold">Waybills Loaded</th>
+                    <th class="p-4 font-semibold">Status</th>
+                    <th class="p-4 font-semibold text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="manifests-table-body" class="divide-y divide-border">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Full-Screen Truck Manifest Sheet -->
+    <div
+      id="fullscreen-manifest-sheet"
+      class="fixed inset-0 bg-background z-50 overflow-y-auto hidden"
+    >
+      <div class="min-h-screen flex flex-col">
+        <!-- Sheet Sticky Top Header -->
+        <header
+          class="h-16 bg-card/95 backdrop-blur border-b border-border sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between shadow-sm"
+        >
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              id="btn-close-fullscreen-sheet"
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-surface text-foreground text-xs font-semibold hover:bg-muted transition-colors cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Back to Manifests</span>
+            </button>
+            <div class="h-4 w-px bg-border hidden sm:block"></div>
+            <div>
+              <span
+                class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block leading-none"
+                >Official Loading Manifest</span
+              >
+              <h2
+                id="fs-manifest-title"
+                class="text-base sm:text-lg font-bold font-poppins text-foreground leading-tight"
+              >
+                MNF-2026-042
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3">
+            <span
+              id="fs-manifest-status-badge"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800"
+              >In Transit</span
+            >
+            <button
+              type="button"
+              onclick="window.print()"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border bg-surface text-foreground text-xs font-semibold hover:border-primary/50 transition-colors cursor-pointer shadow-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path
+                  d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"
+                ></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>Print Sheet</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Sheet Body -->
+        <main
+          class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6"
+        >
+          <!-- Heading Section: Truck & Driver Information Cards -->
+          <div
+            id="fs-manifest-heading-grid"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
+            <!-- Injected via JS -->
+          </div>
+
+          <!-- Manifest Waybills Table -->
+          <div
+            class="rounded-2xl border border-border bg-card overflow-hidden shadow-sm space-y-0"
+          >
+            <div
+              class="p-4 sm:p-5 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface"
+            >
+              <div>
+                <h3
+                  class="font-bold text-base font-poppins text-foreground flex items-center gap-2"
+                >
+                  <span>Waybill Consignments</span>
+                  <span
+                    id="fs-waybill-count"
+                    class="px-2 py-0.5 rounded-full text-xs font-bold bg-primary text-white"
+                    >0</span
+                  >
+                </h3>
+                <p class="text-xs text-muted-foreground mt-0.5">
+                  Toggle customer contact status, payment records, and cargo
+                  delivery receipts in real time.
+                </p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead
+                  class="bg-surface text-xs uppercase text-muted-foreground border-b border-border"
+                >
+                  <tr>
+                    <th class="p-4 font-semibold min-w-50">Receiver Name</th>
+                    <th class="p-4 font-semibold min-w-30">Item Quantity</th>
+                    <th class="p-4 font-semibold min-w-65">
+                      Item Name & Description
+                    </th>
+                    <th class="p-4 font-semibold min-w-32.5">Amount Charged</th>
+                    <th class="p-4 font-semibold min-w-55">
+                      Payment & Method (Paid / Bal / Method)
+                    </th>
+                    <th class="p-4 font-semibold text-center min-w-35">
+                      Reached Out?
+                    </th>
+                    <th class="p-4 font-semibold text-center min-w-35">
+                      Goods Received?
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="fs-manifest-table-body"
+                  class="divide-y divide-border"
+                >
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table Summary Section -->
+          <div
+            id="fs-manifest-summary-section"
+            class="rounded-3xl border border-border bg-surface p-6 sm:p-8 shadow-sm"
+          >
+            <!-- Injected via JS -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="./src/js/theme.js"></script>
+    <script src="./src/js/store.js"></script>
+    <script src="./src/js/admin/auth.js"></script>
+    <script src="./src/js/admin/manifests.js"></script>
+  </body>
+</html>

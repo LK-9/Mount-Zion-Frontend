@@ -1,0 +1,1043 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Settings — Mount Zion Haulage & Logistics</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/x-icon" href="./src/images/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./src/images/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./src/images/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./src/images/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="./site.webmanifest" />
+    <link href="./src/output.css" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("mzhl-theme");
+          if (!t) {
+            t = window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          }
+          if (t === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
+          var a = sessionStorage.getItem("mzhl-super-auth") === "1";
+          var a =
+            sessionStorage.getItem("mzhl-super-auth") === "1" ||
+            localStorage.getItem("mzhl-super-auth") === "1";
+          if (!a) {
+            window.location.replace("super-admin.html");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body
+    class="min-h-screen bg-background text-foreground antialiased selection:bg-red-500 selection:text-white font-poppins transition-colors duration-200"
+  >
+    <div
+      id="super-app-view"
+      class="min-h-screen flex flex-col lg:flex-row bg-background"
+    >
+      <!-- Mobile Backdrop -->
+      <div
+        id="super-sidebar-backdrop"
+        class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden"
+      ></div>
+
+      <!-- Super Admin Sidebar -->
+      <aside
+        id="super-sidebar"
+        class="fixed inset-y-0 left-0 z-40 w-64 bg-surface border-r border-border flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:shrink-0"
+      >
+        <!-- Header -->
+        <div class="h-16 flex items-center gap-3 px-5 border-b border-border">
+          <div
+            class="h-9 w-9 rounded-xl bg-white border border-border/80 dark:border-white/15 shadow-sm flex items-center justify-center p-1 shrink-0"
+          >
+            <img
+              src="./src/images/apple-touch-icon.png"
+              alt="Mount Zion Logo"
+              class="h-full w-full object-contain"
+            />
+          </div>
+          <div class="min-w-0">
+            <h2
+              class="font-bold text-sm text-foreground truncate leading-tight"
+            >
+              Mount Zion
+            </h2>
+            <span
+              class="text-[10px] uppercase tracking-wider text-red-600 dark:text-red-400 font-bold"
+              >Super Admin</span
+            >
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+          <a
+            href="super-admin.html"
+            class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+              <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+              <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+              <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+            </svg>
+            <span>Overview & Reports</span>
+          </a>
+
+          <a
+            href="super-admin-manifests.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                ></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>Manifests</span>
+            </div>
+            <span
+              id="super-badge-manifests"
+              class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300"
+              >0</span
+            >
+          </a>
+
+          <a
+            href="super-admin-finance.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                <path d="M12 18V6"></path>
+              </svg>
+              <span>Payments & Finance</span>
+            </div>
+            <span
+              class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300"
+              >₦</span
+            >
+          </a>
+
+          <a
+            href="super-admin-drivers.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1 .4-1 1v10c0 .6.4 1 1 1h2"
+                ></path>
+                <circle cx="7" cy="17" r="2"></circle>
+                <path d="M9 17h6"></path>
+                <circle cx="17" cy="17" r="2"></circle>
+              </svg>
+              <span>Drivers & Trucks</span>
+            </div>
+            <span
+              id="super-badge-drivers"
+              class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300"
+              >0</span
+            >
+          </a>
+
+          <a
+            href="super-admin-staff.html"
+            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <div class="flex items-center gap-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>Staff & Admins</span>
+            </div>
+            <span
+              id="super-badge-staff"
+              class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300"
+              >0</span
+            >
+          </a>
+
+          <a
+            href="super-admin-settings.html"
+            class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-white bg-primary shadow-glow"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              ></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>System & Pricing</span>
+          </a>
+
+          <a
+            href="super-admin-audit.html"
+            class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+            </svg>
+            <span>Audit Logs</span>
+          </a>
+        </nav>
+
+        <!-- Footer Links -->
+        <div class="p-4 border-t border-border space-y-2">
+          <a
+            href="index.html"
+            target="_blank"
+            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            </svg>
+            <span>Public Website</span>
+          </a>
+
+          <button
+            type="button"
+            id="super-signout-btn"
+            onclick="superAdminSignOut()"
+            class="super-signout-btn w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors cursor-pointer"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" x2="9" y1="12" y2="12"></line>
+            </svg>
+            <span>Lock & Sign Out</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col min-w-0">
+        <header
+          class="min-h-16 h-auto py-2 sm:py-0 sm:h-16 bg-background/95 backdrop-blur border-b border-border flex items-center justify-between px-3 sm:px-6 lg:px-8 sticky top-0 z-20 gap-2 sm:gap-4"
+        >
+          <div
+            class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-1 sm:mr-2"
+          >
+            <button
+              type="button"
+              id="super-menu-toggle"
+              class="lg:hidden p-1.5 sm:p-2 rounded-lg border border-border text-foreground hover:bg-surface cursor-pointer shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="4" x2="20" y1="12" y2="12"></line>
+                <line x1="4" x2="20" y1="6" y2="6"></line>
+                <line x1="4" x2="20" y1="18" y2="18"></line>
+              </svg>
+            </button>
+            <h2
+              class="font-bold text-xs sm:text-base lg:text-lg text-foreground font-poppins leading-tight"
+            >
+              System Rates<br class="sm:hidden" />
+              & Terminals
+            </h2>
+          </div>
+
+          <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <button
+              type="button"
+              class="theme-toggle-btn p-1.5 sm:p-2 rounded-lg border border-border bg-surface text-foreground hover:bg-muted transition-colors cursor-pointer shrink-0"
+              aria-label="Toggle Theme"
+            >
+              <span class="theme-icon-sun hidden"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </span>
+              <span class="theme-icon-moon"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+                  ></path>
+                </svg>
+              </span>
+            </button>
+
+            <span
+              class="inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 border border-purple-300 dark:border-purple-800 shrink-0 whitespace-nowrap"
+            >
+              <span
+                class="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-purple-600 animate-ping"
+              ></span>
+              Super Admin
+            </span>
+          </div>
+        </header>
+
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
+          <div>
+            <h1 class="text-2xl font-bold font-poppins text-foreground">
+              System & Pricing Settings
+            </h1>
+            <p class="text-xs sm:text-sm text-muted-foreground">
+              Configure delivery rates for wraps, cartons, and specialized solar
+              energy equipment casings.
+            </p>
+          </div>
+
+          <form id="form-system-settings" class="space-y-6">
+            <!-- Standard Cargo & Package Rates -->
+            <div class="p-6 rounded-3xl bg-card border border-border space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold text-base font-poppins text-foreground">
+                    Standard Cargo & Package Rates
+                  </h3>
+                  <p class="text-xs text-muted-foreground">
+                    Standard transit and delivery fees for merchant wraps and
+                    cartons.
+                  </p>
+                </div>
+                <span class="p-2.5 rounded-2xl bg-primary/10 text-primary">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+                    ></path>
+                    <path d="m3.3 7 8.7 5 8.7-5"></path>
+                    <path d="M12 22V12"></path>
+                  </svg>
+                </span>
+              </div>
+
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"
+              >
+                <!-- Small Wrap -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-small-wrap"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Small Wrap</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Parcel / Wrap</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Compact parcel, bubble wrap, or small poly pouch
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-small-wrap"
+                      name="smallWrap"
+                      value="2500"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+
+                <!-- Medium Wrap -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-medium-wrap"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Medium Wrap</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Standard Wrap</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Standard bundled parcel or medium wrap
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-medium-wrap"
+                      name="mediumWrap"
+                      value="4500"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+
+                <!-- Big Wrap -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-big-wrap"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Big Wrap</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Heavy Wrap</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Large industrial wrap or bundled wholesale sack
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-big-wrap"
+                      name="bigWrap"
+                      value="7500"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+
+                <!-- Small Carton -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-small-carton"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Small Carton</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Standard Box</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Standard electronics, spare parts, or retail box
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-small-carton"
+                      name="smallCarton"
+                      value="3500"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+
+                <!-- Medium Carton -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-medium-carton"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Medium Carton</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Commercial Box</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Medium commercial merchandise & cargo box
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-medium-carton"
+                      name="mediumCarton"
+                      value="5500"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+
+                <!-- Big Carton -->
+                <div
+                  class="p-4 rounded-2xl bg-surface border border-border space-y-3"
+                >
+                  <div class="flex items-center justify-between">
+                    <label
+                      for="rate-big-carton"
+                      class="block text-xs font-bold text-foreground font-poppins"
+                      >Big Carton</label
+                    >
+                    <span
+                      class="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium"
+                      >Master Crate</span
+                    >
+                  </div>
+                  <p class="text-[11px] text-muted-foreground">
+                    Master shipping carton or heavy wholesale crate
+                  </p>
+                  <div>
+                    <label
+                      class="block text-[10px] uppercase font-semibold text-muted-foreground mb-1"
+                      >Cost / Rate (₦)</label
+                    >
+                    <input
+                      type="number"
+                      id="rate-big-carton"
+                      name="bigCarton"
+                      value="9000"
+                      class="w-full px-3 py-2 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solar & Energy Equipment Casings -->
+            <div class="p-6 rounded-3xl bg-card border border-border space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold text-base font-poppins text-foreground">
+                    Solar Panels & Energy Equipment Casings
+                  </h3>
+                  <p class="text-xs text-muted-foreground">
+                    Configure specialized transit rates for solar panels,
+                    lithium battery, and inverter casings by power and capacity
+                    rating.
+                  </p>
+                </div>
+                <span class="p-2.5 rounded-2xl bg-amber-500/10 text-amber-500">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polygon
+                      points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+                    ></polygon>
+                  </svg>
+                </span>
+              </div>
+
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+                <!-- Casing of Lithium Battery -->
+                <div
+                  class="p-5 rounded-2xl bg-surface border border-border space-y-4"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h4
+                        class="font-bold text-sm text-foreground font-poppins"
+                      >
+                        Casing of Lithium Battery
+                      </h4>
+                      <p class="text-xs text-muted-foreground mt-0.5">
+                        Lithium iron phosphate (LiFePO4) & energy storage
+                        casing.
+                      </p>
+                    </div>
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 shrink-0"
+                    >
+                      Battery Casing
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="battery-rating-select"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Battery Rating & Power
+                      </label>
+                      <select
+                        id="battery-rating-select"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      >
+                        <option value="12v-100ah">12V 100Ah (1.28 kWh)</option>
+                        <option value="12v-200ah">12V 200Ah (2.56 kWh)</option>
+                        <option value="24v-100ah">24V 100Ah (2.56 kWh)</option>
+                        <option value="24v-200ah">24V 200Ah (5.12 kWh)</option>
+                        <option value="48v-100ah" selected>
+                          48V 100Ah (5.12 kWh Server Rack/Wall)
+                        </option>
+                        <option value="48v-200ah">
+                          48V 200Ah (10.24 kWh Powerwall)
+                        </option>
+                        <option value="48v-300ah">
+                          48V 300Ah+ (15+ kWh High-Voltage)
+                        </option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        for="rate-lithium-battery"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Delivery Cost / Rate (₦)
+                      </label>
+                      <input
+                        type="number"
+                        id="rate-lithium-battery"
+                        value="22000"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    class="p-3 rounded-xl bg-card border border-border/70 flex items-center justify-between text-xs"
+                  >
+                    <span class="text-muted-foreground"
+                      >Configured Selected Rating Cost:</span
+                    >
+                    <span
+                      id="display-battery-cost"
+                      class="font-bold text-primary font-poppins"
+                      >₦22,000</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Casing of Inverter -->
+                <div
+                  class="p-5 rounded-2xl bg-surface border border-border space-y-4"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h4
+                        class="font-bold text-sm text-foreground font-poppins"
+                      >
+                        Casing of Inverter
+                      </h4>
+                      <p class="text-xs text-muted-foreground mt-0.5">
+                        Pure sine wave & hybrid solar inverter protective
+                        casing.
+                      </p>
+                    </div>
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 shrink-0"
+                    >
+                      Inverter Casing
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="inverter-rating-select"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Inverter Rating & Power
+                      </label>
+                      <select
+                        id="inverter-rating-select"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      >
+                        <option value="1kva-12v">
+                          1.0 kVA / 12V (Pure Sine Wave)
+                        </option>
+                        <option value="2.5kva-24v">
+                          2.5 kVA / 24V (Pure Sine Wave)
+                        </option>
+                        <option value="3.5kva-24v">
+                          3.5 kVA / 24V (Hybrid Solar)
+                        </option>
+                        <option value="5kva-48v" selected>
+                          5.0 kVA / 48V (Hybrid Solar)
+                        </option>
+                        <option value="7.5kva-48v">
+                          7.5 kVA / 48V (Commercial Hybrid)
+                        </option>
+                        <option value="10kva-48v">
+                          10.0 kVA / 48V (Heavy Commercial)
+                        </option>
+                        <option value="15kva-3p">
+                          15.0 kVA+ (Three-Phase Industrial)
+                        </option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        for="rate-inverter"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Delivery Cost / Rate (₦)
+                      </label>
+                      <input
+                        type="number"
+                        id="rate-inverter"
+                        value="19500"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    class="p-3 rounded-xl bg-card border border-border/70 flex items-center justify-between text-xs"
+                  >
+                    <span class="text-muted-foreground"
+                      >Configured Selected Rating Cost:</span
+                    >
+                    <span
+                      id="display-inverter-cost"
+                      class="font-bold text-primary font-poppins"
+                      >₦19,500</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Packs & Crates of Solar Panels -->
+                <div
+                  class="p-5 rounded-2xl bg-surface border border-border space-y-4"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h4
+                        class="font-bold text-sm text-foreground font-poppins"
+                      >
+                        Packs & Crates of Solar Panels
+                      </h4>
+                      <p class="text-xs text-muted-foreground mt-0.5">
+                        Monocrystalline, bifacial & palletized solar modules.
+                      </p>
+                    </div>
+                    <span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0"
+                    >
+                      Solar Panels
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label
+                        for="solar-panel-rating-select"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Panel Wattage & Pack Type
+                      </label>
+                      <select
+                        id="solar-panel-rating-select"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      >
+                        <optgroup label="Single Panels (By Wattage & Rating)">
+                          <option value="50w-80w">
+                            50W – 80W (DC / Streetlight Module)
+                          </option>
+                          <option value="100w-120w">
+                            100W – 120W (Compact 12V Battery Panel)
+                          </option>
+                          <option value="150w-180w">
+                            150W – 180W (Standard 12V Mono/Poly)
+                          </option>
+                          <option value="200w-250w">
+                            200W – 250W (24V Solar Module)
+                          </option>
+                          <option value="300w-330w">
+                            300W – 330W (Standard Monocrystalline)
+                          </option>
+                          <option value="350w-380w">
+                            350W – 380W (High-Output Monocrystalline)
+                          </option>
+                          <option value="400w-420w">
+                            400W – 420W (Tier-1 Mono Half-Cut)
+                          </option>
+                          <option value="450w-480w">
+                            450W – 480W (Residential Half-Cell)
+                          </option>
+                          <option value="500w-530w">
+                            500W – 530W (Large Commercial Module)
+                          </option>
+                          <option value="550w-580w" selected>
+                            550W – 580W (Commercial Bifacial / Half-Cell)
+                          </option>
+                          <option value="600w-630w">
+                            600W – 630W (High-Efficiency Bifacial)
+                          </option>
+                          <option value="650w-700w">
+                            650W – 700W (Commercial Industrial Panel)
+                          </option>
+                          <option value="700w-750w">
+                            700W – 750W+ (N-Type Industrial Mega Module)
+                          </option>
+                        </optgroup>
+                        <optgroup label="Packs, Bundles & Retail Boxes">
+                          <option value="box-2pcs">
+                            Pack of 2 Panels (Retail Boxed Pair)
+                          </option>
+                          <option value="pack-4pcs">
+                            Bundle of 4 Panels (Small System Pack)
+                          </option>
+                          <option value="pack-6pcs">
+                            Pack of 6 Panels (Standard Residential Pack)
+                          </option>
+                          <option value="pack-8pcs">
+                            Pack of 8 Panels (Commercial Bundle)
+                          </option>
+                        </optgroup>
+                        <optgroup label="Crates & Wholesale Pallets">
+                          <option value="crate-10-12pcs">
+                            Wooden Crate of 10–12 Panels
+                          </option>
+                          <option value="pallet-15-20pcs">
+                            Half Pallet of 15–20 Panels
+                          </option>
+                          <option value="pallet-30-36pcs">
+                            Full Wholesale Pallet of 30–36 Panels
+                          </option>
+                          <option value="pallet-60pcs-double">
+                            Double Pallet / Master Crate (60–72 Panels)
+                          </option>
+                        </optgroup>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        for="rate-solar-panel"
+                        class="block text-xs font-semibold text-muted-foreground mb-1"
+                      >
+                        Delivery Cost / Rate (₦)
+                      </label>
+                      <input
+                        type="number"
+                        id="rate-solar-panel"
+                        value="16000"
+                        class="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    class="p-3 rounded-xl bg-card border border-border/70 flex items-center justify-between text-xs"
+                  >
+                    <span class="text-muted-foreground"
+                      >Configured Selected Rating Cost:</span
+                    >
+                    <span
+                      id="display-solar-panel-cost"
+                      class="font-bold text-primary font-poppins"
+                      >₦16,000</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                type="submit"
+                class="px-6 py-3 rounded-xl bg-gradient-brand text-white font-semibold text-xs shadow-glow hover:opacity-95 cursor-pointer flex items-center gap-2"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </main>
+      </div>
+    </div>
+
+    <script src="./src/js/theme.js"></script>
+    <script src="./src/js/store.js"></script>
+    <script src="./src/js/super-admin/auth.js"></script>
+    <script src="./src/js/super-admin/settings.js"></script>
+  </body>
+</html>
