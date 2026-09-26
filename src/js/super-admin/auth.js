@@ -1,39 +1,39 @@
 // Super Admin Master Auth Guard
 function checkSuperAuth() {
-  const isAuth =
-    sessionStorage.getItem(STORAGE_KEYS.superAuth) === "1" ||
-    localStorage.getItem(STORAGE_KEYS.superAuth) === "1" ||
-    sessionStorage.getItem("mzhl-super-auth") === "1" ||
-    localStorage.getItem("mzhl-super-auth") === "1";
   const currentPath = (
     window.location.pathname.split("/").pop() || ""
   ).toLowerCase();
   const isLoginPage =
     currentPath === "super-admin-login.html" ||
-    currentPath === "super-admin-login";
+    currentPath === "super-admin-login" ||
+    window.location.pathname.toLowerCase().includes("super-admin-login");
+
+  if (isLoginPage) {
+    return;
+  }
+
+  const isAuth =
+    sessionStorage.getItem("mzhl-super-auth") === "1" ||
+    (typeof STORAGE_KEYS !== "undefined" &&
+      sessionStorage.getItem(STORAGE_KEYS.superAuth) === "1");
 
   if (isAuth) {
-    if (isLoginPage) {
-      window.location.replace("super-admin.html");
-      return;
-    }
     document.documentElement.classList.remove("super-logged-out");
     document.documentElement.classList.add("super-logged-in");
   } else {
     document.documentElement.classList.remove("super-logged-in");
     document.documentElement.classList.add("super-logged-out");
-    if (!isLoginPage) {
-      window.location.replace("super-admin-login.html");
-      return;
-    }
+    window.location.replace("super-admin-login.html");
   }
 }
 
 function superAdminSignOut() {
-  sessionStorage.removeItem(STORAGE_KEYS.superAuth);
-  localStorage.removeItem(STORAGE_KEYS.superAuth);
   sessionStorage.removeItem("mzhl-super-auth");
   localStorage.removeItem("mzhl-super-auth");
+  if (typeof STORAGE_KEYS !== "undefined" && STORAGE_KEYS.superAuth) {
+    sessionStorage.removeItem(STORAGE_KEYS.superAuth);
+    localStorage.removeItem(STORAGE_KEYS.superAuth);
+  }
 
   document.documentElement.classList.remove("super-logged-in");
   document.documentElement.classList.add("super-logged-out");
@@ -46,28 +46,33 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSuperAuth();
 
   const loginForm = document.getElementById("super-login-form");
-  if (loginForm) {
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const u = document.getElementById("super-user-input").value.trim();
-      const p = document.getElementById("super-pass-input").value.trim();
-      const err = document.getElementById("super-login-error");
+  const loginBtn =
+    document.getElementById("super-login-btn") ||
+    document.querySelector('#super-login-form button[type="submit"]');
 
-      if (
-        (u === "superadmin" && p === "superadmin123") ||
-        u === "9900" ||
-        p === "9900"
-      ) {
-        sessionStorage.setItem(STORAGE_KEYS.superAuth, "1");
-        localStorage.setItem(STORAGE_KEYS.superAuth, "1");
-        sessionStorage.setItem("mzhl-super-auth", "1");
-        localStorage.setItem("mzhl-super-auth", "1");
-        if (err) err.classList.add("hidden");
-        window.location.replace("super-admin.html");
-      } else {
-        if (err) err.classList.remove("hidden");
-      }
-    });
+  function proceedToSuperAdmin(e) {
+    if (e) e.preventDefault();
+
+    sessionStorage.setItem("mzhl-super-auth", "1");
+    if (typeof STORAGE_KEYS !== "undefined" && STORAGE_KEYS.superAuth) {
+      sessionStorage.setItem(STORAGE_KEYS.superAuth, "1");
+    }
+
+    if (typeof AppStore !== "undefined" && AppStore.logAudit) {
+      AppStore.logAudit("Super Admin Login", "Master suite unlocked");
+    }
+
+    const err = document.getElementById("super-login-error");
+    if (err) err.classList.add("hidden");
+
+    window.location.replace("super-admin.html");
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", proceedToSuperAdmin);
+  }
+  if (loginBtn) {
+    loginBtn.addEventListener("click", proceedToSuperAdmin);
   }
 
   document
