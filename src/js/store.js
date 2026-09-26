@@ -394,7 +394,7 @@ const DateUtils = {
 
   renderPeriodBanner(title, subtitle = "", badgeText = "") {
     return `
-      <div class="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-primary/10 via-card to-card border border-primary/20 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+      <div class="p-3.5 sm:p-4 rounded-2xl bg-linear-to-r from-primary/10 via-card to-card border border-primary/20 flex flex-wrap items-center justify-between gap-3 shadow-xs">
         <div class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-lg shrink-0">
             📅
