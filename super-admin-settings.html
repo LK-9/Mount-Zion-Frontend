@@ -44,7 +44,8 @@
       (function () {
         try {
           var a =
-            sessionStorage.getItem("mzhl-super-auth") === "1";
+            sessionStorage.getItem("mzhl-super-auth") === "1" ||
+            localStorage.getItem("mzhl-super-auth") === "1";
           if (!a) {
             window.location.replace("super-admin-login.html");
           }

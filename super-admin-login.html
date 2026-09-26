@@ -26,7 +26,7 @@
     <link rel="manifest" href="./site.webmanifest" />
     <link href="./src/output.css" rel="stylesheet" />
 
-    <!-- Theme Guard -->
+    <!-- Theme & Auth Check Guard -->
     <script>
       (function () {
         try {
@@ -39,9 +39,12 @@
           if (t === "dark") {
             document.documentElement.classList.add("dark");
           }
-          // Clear active session tokens so login screen always displays cleanly
-          sessionStorage.removeItem("mzhl-super-auth");
-          localStorage.removeItem("mzhl-super-auth");
+          var isAuth =
+            sessionStorage.getItem("mzhl-super-auth") === "1" ||
+            localStorage.getItem("mzhl-super-auth") === "1";
+          if (isAuth) {
+            window.location.replace("super-admin.html");
+          }
         } catch (e) {}
       })();
     </script>
@@ -128,8 +131,16 @@
             Super Admin Portal
           </h1>
           <p class="text-xs text-muted-foreground">
-            Sign in to access executive administration controls.
+            Sign in with executive credentials or master PIN.
           </p>
+        </div>
+
+        <div
+          id="super-login-error"
+          class="hidden p-3.5 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold"
+        >
+          Access denied. Use <strong>superadmin</strong> /
+          <strong>superadmin123</strong> or PIN <strong>9900</strong>.
         </div>
 
         <form id="super-login-form" class="space-y-4">
@@ -142,6 +153,7 @@
             <input
               type="text"
               id="super-user-input"
+              required
               value="superadmin"
               class="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary font-semibold"
             />
@@ -156,6 +168,7 @@
             <input
               type="password"
               id="super-pass-input"
+              required
               value="superadmin123"
               class="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -163,24 +176,9 @@
 
           <button
             type="submit"
-            id="super-login-btn"
-            class="w-full py-3.5 rounded-xl bg-gradient-brand text-white font-semibold text-sm shadow-glow hover:opacity-95 transition-opacity cursor-pointer flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-xl bg-gradient-brand text-white font-semibold text-sm shadow-glow hover:opacity-95 transition-opacity cursor-pointer"
           >
-            <span>Unlock Super Admin Suite</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
+            Unlock Super Admin Suite
           </button>
         </form>
 

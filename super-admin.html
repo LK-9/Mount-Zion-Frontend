@@ -38,7 +38,8 @@
             document.documentElement.classList.add("dark");
           }
           var isAuth =
-            sessionStorage.getItem("mzhl-super-auth") === "1";
+            sessionStorage.getItem("mzhl-super-auth") === "1" ||
+            localStorage.getItem("mzhl-super-auth") === "1";
           if (!isAuth) {
             window.location.replace("super-admin-login.html");
           }
