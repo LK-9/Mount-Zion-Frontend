@@ -26,7 +26,7 @@
     <link rel="manifest" href="./site.webmanifest" />
     <link href="./src/output.css" rel="stylesheet" />
 
-    <!-- Theme & Auth Check Guard -->
+    <!-- Theme Initialization Guard -->
     <script>
       (function () {
         try {
@@ -38,12 +38,6 @@
           }
           if (t === "dark") {
             document.documentElement.classList.add("dark");
-          }
-          var isAuth =
-            sessionStorage.getItem("mzhl-super-auth") === "1" ||
-            localStorage.getItem("mzhl-super-auth") === "1";
-          if (isAuth) {
-            window.location.replace("super-admin.html");
           }
         } catch (e) {}
       })();
@@ -135,6 +129,19 @@
           </p>
         </div>
 
+        <!-- Banner shown when already authenticated -->
+        <div
+          id="super-already-logged-banner"
+          class="hidden p-3.5 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-medium flex items-center justify-between gap-2"
+        >
+          <div>You have active Super Admin access.</div>
+          <a
+            href="super-admin.html"
+            class="px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold text-xs hover:opacity-90 transition-opacity"
+            >Open Suite &rarr;</a
+          >
+        </div>
+
         <div
           id="super-login-error"
           class="hidden p-3.5 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold"
@@ -154,6 +161,8 @@
               type="text"
               id="super-user-input"
               required
+              autocomplete="username"
+              placeholder="superadmin or PIN 9900"
               value="superadmin"
               class="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary font-semibold"
             />
@@ -163,12 +172,13 @@
             <label
               for="super-pass-input"
               class="block text-xs font-medium text-muted-foreground mb-1.5"
-              >Password</label
+              >Password (optional if using PIN)</label
             >
             <input
               type="password"
               id="super-pass-input"
-              required
+              autocomplete="current-password"
+              placeholder="superadmin123 (or leave blank if using PIN)"
               value="superadmin123"
               class="w-full px-4 py-3 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />

@@ -26,7 +26,7 @@
     <link rel="manifest" href="./site.webmanifest" />
     <link href="./src/output.css" rel="stylesheet" />
 
-    <!-- Theme & Auth Check Guard -->
+    <!-- Theme Initialization Guard -->
     <script>
       (function () {
         try {
@@ -38,14 +38,6 @@
           }
           if (t === "dark") {
             document.documentElement.classList.add("dark");
-          }
-          var isAuth =
-            sessionStorage.getItem("mzhl-admin-auth") === "1" ||
-            localStorage.getItem("mzhl-admin-auth") === "1" ||
-            sessionStorage.getItem("mzhl-auth") === "1" ||
-            localStorage.getItem("mzhl-auth") === "1";
-          if (isAuth) {
-            window.location.replace("admin.html");
           }
         } catch (e) {}
       })();
@@ -132,13 +124,26 @@
           </p>
         </div>
 
+        <!-- Banner shown when already authenticated -->
+        <div
+          id="already-logged-banner"
+          class="hidden p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium flex items-center justify-between gap-2"
+        >
+          <div>You have an active Staff session.</div>
+          <a
+            href="admin.html"
+            class="px-3 py-1.5 rounded-lg bg-primary text-white font-semibold text-xs hover:opacity-90 transition-opacity"
+            >Open Console &rarr;</a
+          >
+        </div>
+
         <div
           id="login-error-alert"
           class="hidden p-3.5 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold"
         >
           Invalid credentials. Please enter your registered
           <strong>Work Email</strong> and
-          <strong>Phone Number</strong> (Password).
+          <strong>Phone Number</strong> (Password), or use <strong>admin</strong> / <strong>admin</strong>.
         </div>
 
         <form id="admin-login-form" class="space-y-4">
@@ -146,13 +151,14 @@
             <label
               for="login-email"
               class="block text-xs font-medium text-muted-foreground mb-1.5"
-              >Work Email Address</label
+              >Work Email Address or Username</label
             >
             <input
-              type="email"
+              type="text"
               id="login-email"
               required
-              placeholder="e.g. tamuno@mountzion.com"
+              autocomplete="username"
+              placeholder="e.g. tamuno@mountzion.com or admin"
               value="tamuno@mountzion.com"
               class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
@@ -168,7 +174,8 @@
               type="password"
               id="login-password"
               required
-              placeholder="e.g. 0809 555 7788"
+              autocomplete="current-password"
+              placeholder="e.g. 0809 555 7788 or admin"
               value="0809 555 7788"
               class="w-full px-3.5 py-2.5 rounded-xl border border-border bg-surface text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />

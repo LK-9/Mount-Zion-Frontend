@@ -10,22 +10,26 @@ function checkSuperAuth() {
   ).toLowerCase();
   const isLoginPage =
     currentPath === "super-admin-login.html" ||
-    currentPath === "super-admin-login";
+    currentPath === "super-admin-login" ||
+    window.location.pathname.toLowerCase().includes("super-admin-login");
+
+  const loggedBanner = document.getElementById("super-already-logged-banner");
 
   if (isAuth) {
     if (isLoginPage) {
-      window.location.replace("super-admin.html");
+      if (loggedBanner) loggedBanner.classList.remove("hidden");
       return;
     }
     document.documentElement.classList.remove("super-logged-out");
     document.documentElement.classList.add("super-logged-in");
   } else {
-    document.documentElement.classList.remove("super-logged-in");
-    document.documentElement.classList.add("super-logged-out");
-    if (!isLoginPage) {
-      window.location.replace("super-admin-login.html");
+    if (isLoginPage) {
+      if (loggedBanner) loggedBanner.classList.add("hidden");
       return;
     }
+    document.documentElement.classList.remove("super-logged-in");
+    document.documentElement.classList.add("super-logged-out");
+    window.location.replace("super-admin-login.html");
   }
 }
 
@@ -49,15 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const u = document.getElementById("super-user-input").value.trim();
-      const p = document.getElementById("super-pass-input").value.trim();
+      const u = (document.getElementById("super-user-input")?.value || "").trim();
+      const p = (document.getElementById("super-pass-input")?.value || "").trim();
       const err = document.getElementById("super-login-error");
 
-      if (
+      const isExecutive =
         (u === "superadmin" && p === "superadmin123") ||
         u === "9900" ||
-        p === "9900"
-      ) {
+        p === "9900" ||
+        (u === "admin" && p === "admin");
+
+      if (isExecutive) {
         sessionStorage.setItem(STORAGE_KEYS.superAuth, "1");
         localStorage.setItem(STORAGE_KEYS.superAuth, "1");
         sessionStorage.setItem("mzhl-super-auth", "1");

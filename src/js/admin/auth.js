@@ -13,22 +13,27 @@ function checkAdminAuth() {
     window.location.pathname.split("/").pop() || ""
   ).toLowerCase();
   const isLoginPage =
-    currentPath === "admin-login.html" || currentPath === "admin-login";
+    currentPath === "admin-login.html" ||
+    currentPath === "admin-login" ||
+    window.location.pathname.toLowerCase().includes("admin-login");
+
+  const loggedBanner = document.getElementById("already-logged-banner");
 
   if (isAuth) {
     if (isLoginPage) {
-      window.location.replace("admin.html");
+      if (loggedBanner) loggedBanner.classList.remove("hidden");
       return;
     }
     document.documentElement.classList.remove("admin-logged-out");
     document.documentElement.classList.add("admin-logged-in");
   } else {
-    document.documentElement.classList.remove("admin-logged-in");
-    document.documentElement.classList.add("admin-logged-out");
-    if (!isLoginPage) {
-      window.location.replace("admin-login.html");
+    if (isLoginPage) {
+      if (loggedBanner) loggedBanner.classList.add("hidden");
       return;
     }
+    document.documentElement.classList.remove("admin-logged-in");
+    document.documentElement.classList.add("admin-logged-out");
+    window.location.replace("admin-login.html");
   }
 }
 
@@ -50,6 +55,8 @@ function adminSignOut() {
   localStorage.removeItem(STORAGE_KEYS.auth);
   sessionStorage.removeItem("mzhl-admin-auth");
   localStorage.removeItem("mzhl-admin-auth");
+  sessionStorage.removeItem("mzhl-auth");
+  localStorage.removeItem("mzhl-auth");
   sessionStorage.removeItem(STORAGE_KEYS.activeStaffUser);
   localStorage.removeItem(STORAGE_KEYS.activeStaffUser);
   sessionStorage.removeItem("mzhl-active-staff-user");
