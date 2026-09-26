@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mount Zion Haulage &amp; Logistics â€” Super Admin Login</title>
+    <title>Mount Zion Haulage &amp; Logistics — Super Admin Login</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/x-icon" href="./src/images/favicon.ico" />
     <link
@@ -130,6 +130,27 @@
           <p class="text-xs text-muted-foreground">
             Sign in to access executive administration controls.
           </p>
+        </div>
+
+                <!-- Banner shown when already authenticated -->
+        <div
+          id="super-already-logged-banner"
+          class="hidden p-3.5 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-medium flex items-center justify-between gap-2"
+        >
+          <div>You have an active Super Admin session.</div>
+          <a
+            href="super-admin.html"
+            class="px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold text-xs hover:opacity-90 transition-opacity"
+            >Enter Suite &rarr;</a
+          >
+        </div>
+
+        <div
+          id="super-login-error"
+          class="hidden p-3.5 rounded-xl bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold"
+        >
+          Access denied. Use <strong>superadmin</strong> /
+          <strong>superadmin123</strong> or PIN <strong>9900</strong>.
         </div>
 
         <form id="super-login-form" class="space-y-4">
