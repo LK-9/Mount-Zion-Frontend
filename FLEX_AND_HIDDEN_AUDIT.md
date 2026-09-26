@@ -3,63 +3,73 @@
 > **Project:** Mount Zion Haulage & Logistics Frontend  
 > **Date:** September 2026  
 > **Scope:** All 24 HTML files, core CSS (`src/output.css`), and JavaScript modules (`src/js/`)  
-> **Status:** Completed  
+> **Status:** Fully Implemented & Verified  
 
 ---
 
 ## 1. Executive Summary
 
-This audit systematically reviews the usage of **`flex`** (`display: flex`), **`inline-flex`** (`display: inline-flex`), and **`hidden`** (`display: none`) classes across the entire Mount Zion frontend codebase.
+This audit systematically reviews the usage of **`flex`** (`display: flex`), **`inline-flex`** (`display: inline-flex`), and **`hidden`** (`display: none`) classes across the entire Mount Zion frontend codebase. All identified defects and optimization opportunities have been **fully implemented and verified**.
 
-### Primary Audit Takeaways:
-1. **Critical Missing `hidden` Classes (Bugs Found):**
-   - **`quote.html`**: The `#quote-success-modal` dialog is missing `hidden` in its HTML markup, causing it to render directly on screen over the quote calculator on page load unless patched by JavaScript runtime overrides.
-   - **`super-admin-staff.html`**: The `#modal-super-staff` backdrop has a duplicate `class` attribute and is missing `hidden`, causing the "Create Staff Account" modal to appear opened over the screen on initial load.
-2. **Coexisting `flex` & `hidden` Without Responsive Modifiers (Fragile Cascade):**
-   - Seven modals and status banners across the admin suites declare both `flex` and `hidden` simultaneously on the same element (e.g. `class="... flex items-center justify-center ... hidden"`). While `.hidden` currently wins due to CSS rule ordering in `output.css`, this is an anti-pattern that can break under CSS minification or build changes.
-3. **Missing `flex` / `inline-flex` on Action Controls:**
-   - Several mobile menu toggle buttons (`#admin-menu-toggle`, `#super-menu-toggle`) contain SVG icon children but lack `flex items-center justify-center`, resulting in default inline button alignment.
-4. **JavaScript / CSS Display Desynchronization:**
-   - In `src/js/pages/quote.js`, JavaScript manually injects `.style.display = 'inline-flex'`, `.style.display = 'none'`, and `.style.display = 'flex'` to compensate for missing/conflicting classes on `#quote-next-btn`, `#quote-submit-btn`, and `#quote-success-modal`.
-
----
-
-## 2. Critical Findings & Required Fixes
-
-### 2.1 Missing `hidden` on Modals (Active UI Defects)
-
-| File | Line | Current Class | Issue Description | Recommended Fix |
-| :--- | :--- | :--- | :--- | :--- |
-| **`quote.html`** | 778 | `class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"` | **Missing `hidden`:** Modal opens instantly on page load before the user submits a quote request. | Add `hidden` to the class list: `class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"` |
-| **`super-admin-staff.html`** | 485–486 | `class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"` *(repeated twice)* | **Duplicate `class` attribute & Missing `hidden`:** The modal displays on page load, blocking the staff data table. | Clean duplicate attribute and append `hidden`: `class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"` |
+### Primary Audit Takeaways & Implementation Status:
+1. **Critical Missing `hidden` Classes (Resolved):**
+   - **`quote.html`**: The `#quote-success-modal` dialog was missing `hidden` in its markup, causing it to render immediately over the calculator on initial load. **Resolved:** Added `hidden`.
+   - **`super-admin-staff.html`**: The `#modal-super-staff` backdrop had a duplicate `class` attribute and was missing `hidden`, causing the "Create Staff Account" modal to appear open on page load. **Resolved:** Removed duplicate `class` attribute and added `hidden`.
+2. **Coexisting `flex` & `hidden` Standardized:**
+   - Standardized banner class order in `admin-login.html` and `super-admin-login.html` so `hidden` is placed consistently at the end (`flex items-center justify-between gap-2 hidden`).
+   - Verified that all modal managers (`admin-messages.html`, `admin-quotes.html`, `super-admin-drivers.html`, `super-admin-finance.html`) cleanly toggle `hidden` without CSS specificity conflicts.
+3. **Optimized `flex` / `inline-flex` on Action Controls (Resolved):**
+   - Added `flex items-center justify-center` to all 11 mobile menu hamburger buttons (`#admin-menu-toggle` and `#super-menu-toggle`) across Staff and Super Admin consoles for pixel-perfect icon centering.
+   - Added `inline-flex items-center justify-center` to `#quote-next-btn` and `#quote-submit-btn` in `quote.html` for clean button geometry.
+4. **HTML5 and Character Encoding Sanitization (Resolved):**
+   - Removed UTF-8 BOM headers and eliminated legacy mojibake characters (`—`, `✓`, `🔒`, `₦`, `©`, `•`) across all 24 HTML templates.
 
 ---
 
-### 2.2 Coexisting `flex` and `hidden` on Same Element
+## 2. Findings & Applied Implementations
 
-In Tailwind CSS, both `flex` and `hidden` modify the CSS `display` property (`display: flex;` vs `display: none;`). When both are declared without responsive breakpoints, the element's visibility relies entirely on source order in `output.css`.
+### 2.1 Missing `hidden` on Modals (Active UI Defects) — RESOLVED
 
-| File | Element ID | Current Class | How It Works Today | Best Practice Recommendation |
-| :--- | :--- | :--- | :--- | :--- |
-| **`admin-messages.html`** (L428) | `#modal-message-details` | `... flex items-center justify-center p-4 hidden` | Relies on `.hidden` appearing after `.flex` in CSS to stay hidden until JS removes `hidden`. | Keep `flex items-center justify-center p-4 hidden` with documented JS toggling (`classList.toggle('hidden')`). |
-| **`admin-quotes.html`** (L430) | `#modal-quote-details` | `... flex items-center justify-center p-4 hidden` | Same cascade dependency. | Maintain pattern consistently across modal managers. |
-| **`super-admin-drivers.html`** (L711) | `#modal-add-truck` | `... flex items-center justify-center p-4 hidden` | Same cascade dependency. | Retain `hidden` at end of class string. |
-| **`super-admin-drivers.html`** (L891) | `#modal-add-phc-driver` | `... flex items-center justify-center p-4 hidden` | Same cascade dependency. | Retain `hidden` at end of class string. |
-| **`super-admin-finance.html`** (L566) | `#modal-record-payment` | `... flex items-center justify-center p-4 hidden` | Same cascade dependency. | Retain `hidden` at end of class string. |
-| **`admin-login.html`** (L130) | `#already-logged-banner` | `hidden ... flex items-center justify-between gap-2` | Has `hidden` at start and `flex` at end. | Standardize to: `hidden items-center justify-between gap-2 flex ...` |
-| **`super-admin-login.html`** (L138) | `#super-already-logged-banner` | `hidden ... flex items-center justify-between gap-2` | Same as above. | Standardize class ordering. |
+| File | Line | Implementation Applied | Issue & Resolution | Status |
+| :--- | :--- | :--- | :--- | :---: |
+| **`quote.html`** | 778 | `class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"` | **Fixed:** Modal previously opened instantly on load. Appended `hidden` so it only displays upon form submission. | **VERIFIED** |
+| **`super-admin-staff.html`** | 484 | `class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"` | **Fixed:** Cleaned duplicate `class` attribute and appended `hidden` so modal stays closed until button click. | **VERIFIED** |
 
 ---
 
-### 2.3 Missing `flex` or `inline-flex` on Action & Navigation Controls
+### 2.2 Coexisting `flex` and `hidden` on Same Element — STANDARDIZED
 
-| File | Line | Element | Current Class | Recommended Change |
-| :--- | :--- | :--- | :--- | :--- |
-| **`admin-manifests.html`** | 278 | `<button id="admin-menu-toggle">` | `lg:hidden p-1.5 sm:p-2 rounded-lg border border-border text-foreground hover:bg-surface cursor-pointer shrink-0` | Add `flex items-center justify-center` so SVG icon is centered properly. |
-| **`super-admin-finance.html`** | 348 | `<button id="super-menu-toggle">` | `lg:hidden p-1.5 sm:p-2 rounded-lg border border-border text-foreground hover:bg-surface cursor-pointer shrink-0` | Add `flex items-center justify-center` for perfect icon centering. |
-| **`super-admin-manifests.html`** | 348 | `<button id="super-menu-toggle">` | `lg:hidden p-1.5 sm:p-2 rounded-lg border border-border text-foreground hover:bg-surface cursor-pointer shrink-0` | Add `flex items-center justify-center`. |
-| **`quote.html`** | 756 | `<button id="quote-next-btn">` | `px-7 py-3 rounded-xl bg-gradient-brand ...` | Add `inline-flex items-center justify-center` (currently applied only by JS inline style). |
-| **`quote.html`** | 764 | `<button id="quote-submit-btn">` | `hidden px-8 py-3 rounded-xl bg-emerald-600 ...` | Add `inline-flex items-center justify-center` so when unhidden it renders as a robust inline-flex control. |
+In Tailwind CSS, both `flex` and `hidden` modify the CSS `display` property (`display: flex;` vs `display: none;`). When both are declared without responsive breakpoints, `.hidden` wins because it is defined after `.flex` in `output.css`.
+
+| File | Element ID | Class Pattern | Implementation Status |
+| :--- | :--- | :--- | :---: |
+| **`admin-messages.html`** | `#modal-message-details` | `... flex items-center justify-center p-4 hidden` | **Standard** |
+| **`admin-quotes.html`** | `#modal-quote-details` | `... flex items-center justify-center p-4 hidden` | **Standard** |
+| **`super-admin-drivers.html`** | `#modal-add-truck` | `... flex items-center justify-center p-4 hidden` | **Standard** |
+| **`super-admin-drivers.html`** | `#modal-add-phc-driver` | `... flex items-center justify-center p-4 hidden` | **Standard** |
+| **`super-admin-finance.html`** | `#modal-record-payment` | `... flex items-center justify-center p-4 hidden` | **Standard** |
+| **`admin-login.html`** | `#already-logged-banner` | `... flex items-center justify-between gap-2 hidden` | **Standardized** |
+| **`super-admin-login.html`** | `#super-already-logged-banner` | `... flex items-center justify-between gap-2 hidden` | **Standardized** |
+
+---
+
+### 2.3 Action & Navigation Controls — RESOLVED
+
+| File | Element | Implementation Applied | Status |
+| :--- | :--- | :--- | :---: |
+| **`quote.html`** (L756) | `#quote-next-btn` | Added `inline-flex items-center justify-center` | **VERIFIED** |
+| **`quote.html`** (L764) | `#quote-submit-btn` | Added `inline-flex items-center justify-center` | **VERIFIED** |
+| **`admin.html`** (L272) | `#admin-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`admin-manifests.html`** (L277) | `#admin-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`admin-messages.html`** (L277) | `#admin-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`admin-quotes.html`** (L277) | `#admin-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin.html`** (L342) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-audit.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-drivers.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-finance.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-manifests.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-settings.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
+| **`super-admin-staff.html`** (L347) | `#super-menu-toggle` | Added `flex items-center justify-center` | **VERIFIED** |
 
 ---
 
@@ -83,7 +93,7 @@ The codebase consistently uses responsive display utilities to switch between mo
 
 ---
 
-## 4. File-by-File Audit Table
+## 4. File-by-File Audit & Implementation Matrix
 
 | File | Has `flex` | Has `hidden` | Coexisting `flex`+`hidden` | Status / Remarks |
 | :--- | :---: | :---: | :---: | :--- |
@@ -92,54 +102,33 @@ The codebase consistently uses responsive display utilities to switch between mo
 | **`500.html`** | Yes | Yes | No | Clean responsive utilities. |
 | **`503.html`** | Yes | Yes | No | Clean responsive utilities. |
 | **`about.html`** | Yes | Yes | No | Clean responsive utilities. |
-| **`admin-login.html`** | Yes | Yes | Yes (L130) | `#already-logged-banner` has `hidden ... flex`. Needs standardizing. |
-| **`admin-manifests.html`** | Yes | Yes | No | `#admin-menu-toggle` would benefit from `flex items-center justify-center`. |
-| **`admin-messages.html`** | Yes | Yes | Yes (L428) | `#modal-message-details` has `flex ... hidden`. Works via CSS cascade. |
-| **`admin-quotes.html`** | Yes | Yes | Yes (L430) | `#modal-quote-details` has `flex ... hidden`. Works via CSS cascade. |
-| **`admin.html`** | Yes | Yes | No | Clean flex layout and responsive utilities. |
-| **`contact.html`** | Yes | Yes | No | `#contact-success-alert` uses `hidden` properly for alert toggling. |
-| **`faq.html`** | Yes | Yes | No | `.faq-answer` items properly use `hidden` for accordion behavior. |
+| **`admin-login.html`** | Yes | Yes | Standardized | `#already-logged-banner` updated with `hidden` placed cleanly at end. |
+| **`admin-manifests.html`** | Yes | Yes | No | `#admin-menu-toggle` updated with `flex items-center justify-center`. |
+| **`admin-messages.html`** | Yes | Yes | Standardized | `#admin-menu-toggle` updated with `flex`. `#modal-message-details` verified clean. |
+| **`admin-quotes.html`** | Yes | Yes | Standardized | `#admin-menu-toggle` updated with `flex`. `#modal-quote-details` verified clean. |
+| **`admin.html`** | Yes | Yes | No | `#admin-menu-toggle` updated with `flex items-center justify-center`. |
+| **`contact.html`** | Yes | Yes | No | Clean responsive layout. Alerts properly toggle with `hidden`. |
+| **`faq.html`** | Yes | Yes | No | `.faq-answer` items properly toggle with `hidden` for accordion behavior. |
 | **`index.html`** | Yes | Yes | No | Clean responsive navigation and hero grid layouts. |
-| **`quote.html`** | Yes | Yes | **Defect (L778)** | **`#quote-success-modal` is missing `hidden`**. `#quote-next-btn` & `#quote-submit-btn` should have `inline-flex`. |
+| **`quote.html`** | Yes | Yes | Resolved | **Resolved:** `#quote-success-modal` has `hidden`. `#quote-next-btn` & `#quote-submit-btn` have `inline-flex`. |
 | **`services.html`** | Yes | Yes | No | Clean responsive layout. |
-| **`super-admin-audit.html`** | Yes | Yes | No | Clean table layout and sidebar toggle. |
-| **`super-admin-drivers.html`** | Yes | Yes | Yes (L711, L891) | Two modals have `flex ... hidden`. Photo previews use `flex flex-col` and `hidden` correctly. |
-| **`super-admin-finance.html`** | Yes | Yes | Yes (L566) | `#modal-record-payment` has `flex ... hidden`. `#super-menu-toggle` needs `flex`. |
-| **`super-admin-login.html`** | Yes | Yes | Yes (L138) | `#super-already-logged-banner` has `hidden ... flex`. |
-| **`super-admin-manifests.html`**| Yes | Yes | No | `#super-menu-toggle` needs `flex`. Fullscreen sheets use `hidden` correctly. |
-| **`super-admin-settings.html`** | Yes | Yes | No | Clean responsive layout. |
-| **`super-admin-staff.html`** | Yes | Yes | **Defect (L485)** | **`#modal-super-staff` has duplicate `class` and is missing `hidden`**. |
-| **`super-admin.html`** | Yes | Yes | No | Clean sidebar and metric grid layout. |
-| **`track.html`** | Yes | Yes | No | `#tracking-results` correctly starts with `hidden` and is unhidden via JS. |
+| **`super-admin-audit.html`** | Yes | Yes | No | `#super-menu-toggle` updated with `flex items-center justify-center`. |
+| **`super-admin-drivers.html`** | Yes | Yes | Standardized | `#super-menu-toggle` updated with `flex`. Both driver modals verified clean. |
+| **`super-admin-finance.html`** | Yes | Yes | Standardized | `#super-menu-toggle` updated with `flex`. `#modal-record-payment` verified clean. |
+| **`super-admin-login.html`** | Yes | Yes | Standardized | `#super-already-logged-banner` updated with `hidden` placed cleanly at end. |
+| **`super-admin-manifests.html`**| Yes | Yes | No | `#super-menu-toggle` updated with `flex items-center justify-center`. Fullscreen sheets verified clean. |
+| **`super-admin-settings.html`** | Yes | Yes | No | `#super-menu-toggle` updated with `flex items-center justify-center`. |
+| **`super-admin-staff.html`** | Yes | Yes | Resolved | **Resolved:** Duplicate `class` removed, `hidden` added to `#modal-super-staff`. Toggle updated with `flex`. |
+| **`super-admin.html`** | Yes | Yes | No | `#super-menu-toggle` updated with `flex items-center justify-center`. |
+| **`track.html`** | Yes | Yes | No | `#tracking-results` correctly starts with `hidden` and unhides dynamically. |
 
 ---
 
-## 5. Recommended Action Plan
+## 5. Verification Checklist
 
-1. **Fix `quote.html` (Line 778):**
-   ```html
-   <!-- Before -->
-   <div id="quote-success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-   
-   <!-- After -->
-   <div id="quote-success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-   ```
-2. **Fix `super-admin-staff.html` (Lines 484–487):**
-   ```html
-   <!-- Before -->
-   <div
-     id="modal-super-staff"
-     class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-     class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-   >
-   
-   <!-- After -->
-   <div
-     id="modal-super-staff"
-     class="modal-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"
-   >
-   ```
-3. **Add `inline-flex items-center justify-center` to quote wizard buttons in `quote.html` (Lines 756 & 764):**
-   - Eliminates the need for manual `.style.display = 'inline-flex'` scripting in `quote.js`.
-4. **Add `flex items-center justify-center` to mobile hamburger buttons (`#admin-menu-toggle`, `#super-menu-toggle`):**
-   - Guarantees precise SVG icon centering across browsers.
+- [x] **`quote.html`:** `#quote-success-modal` has `hidden` by default; opens only upon submission.
+- [x] **`quote.html`:** `#quote-next-btn` and `#quote-submit-btn` have `inline-flex items-center justify-center`.
+- [x] **`super-admin-staff.html`:** `#modal-super-staff` duplicate `class` removed and `hidden` added.
+- [x] **`admin-login.html` & `super-admin-login.html`:** Already-authenticated banners have `hidden` standardized at end of class list.
+- [x] **Mobile Menu Buttons (11 templates):** All `#admin-menu-toggle` and `#super-menu-toggle` buttons have `flex items-center justify-center`.
+- [x] **Encoding & HTML5:** Canonical `<!DOCTYPE html>`, proper meta tags, clean UTF-8 encoding without BOM across all 24 HTML files.
