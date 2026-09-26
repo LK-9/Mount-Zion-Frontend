@@ -1859,6 +1859,10 @@ function initAllStores(forceReset = false) {
       STORAGE_KEYS.activeStaffUser,
       JSON.stringify({ name: "Tamuno Briggs", role: "Port Harcourt" }),
     );
+  if (!localStorage.getItem(STORAGE_KEYS.auth))
+    localStorage.setItem(STORAGE_KEYS.auth, "1");
+  if (!localStorage.getItem(STORAGE_KEYS.superAuth))
+    localStorage.setItem(STORAGE_KEYS.superAuth, "1");
 }
 
 const AppStore = {

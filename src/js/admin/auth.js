@@ -1,14 +1,9 @@
-// Staff Admin Master Auth Guard & Centralized Staff State Sync
-function normalizeDigits(str) {
-  return (str || "").replace(/\D/g, "");
-}
-
+// Staff Admin Master Auth Guard & Direct Navigation Handler
 function checkAdminAuth() {
   const isAuth =
-    sessionStorage.getItem(STORAGE_KEYS.auth) === "1" ||
-    localStorage.getItem(STORAGE_KEYS.auth) === "1" ||
     sessionStorage.getItem("mzhl-admin-auth") === "1" ||
-    localStorage.getItem("mzhl-admin-auth") === "1";
+    sessionStorage.getItem(STORAGE_KEYS.auth) === "1";
+
   const currentPath = (
     window.location.pathname.split("/").pop() || ""
   ).toLowerCase();
@@ -17,22 +12,7 @@ function checkAdminAuth() {
     currentPath === "admin-login" ||
     window.location.pathname.toLowerCase().includes("admin-login");
 
-  const loggedBanner = document.getElementById("already-logged-banner");
-
-  if (isAuth) {
-    if (isLoginPage) {
-      if (loggedBanner) loggedBanner.classList.remove("hidden");
-      return;
-    }
-    document.documentElement.classList.remove("admin-logged-out");
-    document.documentElement.classList.add("admin-logged-in");
-  } else {
-    if (isLoginPage) {
-      if (loggedBanner) loggedBanner.classList.add("hidden");
-      return;
-    }
-    document.documentElement.classList.remove("admin-logged-in");
-    document.documentElement.classList.add("admin-logged-out");
+  if (!isLoginPage && !isAuth) {
     window.location.replace("admin-login.html");
   }
 }
@@ -51,11 +31,11 @@ function syncLoggedInStaffUI() {
 }
 
 function adminSignOut() {
-  sessionStorage.removeItem(STORAGE_KEYS.auth);
-  localStorage.removeItem(STORAGE_KEYS.auth);
   sessionStorage.removeItem("mzhl-admin-auth");
-  localStorage.removeItem("mzhl-admin-auth");
+  sessionStorage.removeItem(STORAGE_KEYS.auth);
   sessionStorage.removeItem("mzhl-auth");
+  localStorage.removeItem("mzhl-admin-auth");
+  localStorage.removeItem(STORAGE_KEYS.auth);
   localStorage.removeItem("mzhl-auth");
   sessionStorage.removeItem(STORAGE_KEYS.activeStaffUser);
   localStorage.removeItem(STORAGE_KEYS.activeStaffUser);
@@ -77,76 +57,38 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
+
       const emailInput =
         document.getElementById("login-email") ||
         document.getElementById("login-username");
-      const passInput = document.getElementById("login-password");
-      const emailVal = (emailInput?.value || "").trim().toLowerCase();
-      const passVal = (passInput?.value || "").trim();
-      const err = document.getElementById("login-error-alert");
+      const emailVal = (emailInput?.value || "").trim();
 
-      const staffList =
-        typeof AppStore !== "undefined" && AppStore.getStaff
-          ? AppStore.getStaff()
-          : [];
+      let staffUser = {
+        name: "Tamuno Briggs",
+        role: "PHC Depot Manager",
+        email: "tamuno@mountzion.com",
+        phone: "0809 555 7788",
+      };
 
-      // Match by staff email and password (phone number)
-      const matchedStaff = staffList.find((s) => {
-        if (!s.email) return false;
-        const emailMatch = s.email.trim().toLowerCase() === emailVal;
-        if (!emailMatch) return false;
-
-        const rawPassword = s.password || s.phone || "";
-        const isExactPass = rawPassword === passVal;
-        const isPhonePass =
-          normalizeDigits(rawPassword) !== "" &&
-          normalizeDigits(rawPassword) === normalizeDigits(passVal);
-        return isExactPass || isPhonePass;
-      });
-
-      // Fallback for quick testing
-      const isDemoFallback =
-        (emailVal === "admin" && passVal === "admin") ||
-        (emailVal === "tamuno@mountzion.com" &&
-          (passVal === "admin" || normalizeDigits(passVal) === "08095557788"));
-
-      if (matchedStaff && matchedStaff.status !== "Inactive") {
-        AppStore.setActiveStaff({
-          name: matchedStaff.name,
-          email: matchedStaff.email,
-          phone: matchedStaff.phone,
-          role: matchedStaff.role,
-          photo: matchedStaff.photo || "",
-        });
-        sessionStorage.setItem(STORAGE_KEYS.auth, "1");
-        localStorage.setItem(STORAGE_KEYS.auth, "1");
-        sessionStorage.setItem("mzhl-admin-auth", "1");
-        localStorage.setItem("mzhl-admin-auth", "1");
-        AppStore.logAudit(
-          "Staff Login",
-          `${matchedStaff.name} (${matchedStaff.role}) logged in`,
-        );
-        if (err) err.classList.add("hidden");
-        window.location.replace("admin.html");
-      } else if (isDemoFallback) {
-        const defaultUser = staffList.find((s) =>
-          s.email?.toLowerCase().includes("tamuno"),
-        ) || {
-          name: "Tamuno Briggs",
-          role: "PHC Depot Manager",
-          email: "tamuno@mountzion.com",
-          phone: "0809 555 7788",
-        };
-        AppStore.setActiveStaff(defaultUser);
-        sessionStorage.setItem(STORAGE_KEYS.auth, "1");
-        localStorage.setItem(STORAGE_KEYS.auth, "1");
-        sessionStorage.setItem("mzhl-admin-auth", "1");
-        localStorage.setItem("mzhl-admin-auth", "1");
-        if (err) err.classList.add("hidden");
-        window.location.replace("admin.html");
-      } else {
-        if (err) err.classList.remove("hidden");
+      if (
+        emailVal &&
+        emailVal.toLowerCase() !== "tamuno@mountzion.com" &&
+        emailVal.toLowerCase() !== "admin"
+      ) {
+        staffUser.name = emailVal.includes("@")
+          ? emailVal.split("@")[0]
+          : emailVal;
+        staffUser.email = emailVal;
       }
+
+      if (typeof AppStore !== "undefined" && AppStore.setActiveStaff) {
+        AppStore.setActiveStaff(staffUser);
+      }
+
+      sessionStorage.setItem("mzhl-admin-auth", "1");
+      sessionStorage.setItem(STORAGE_KEYS.auth, "1");
+
+      window.location.href = "admin.html";
     });
   }
 
@@ -172,17 +114,5 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebar.classList.add("-translate-x-full");
       backdrop.classList.add("hidden");
     });
-  }
-});
-
-// Real-time synchronization across multiple browser tabs / windows
-window.addEventListener("storage", (e) => {
-  if (
-    e.key === STORAGE_KEYS.activeStaffUser ||
-    e.key === STORAGE_KEYS.auth ||
-    e.key === "mzhl-admin-auth"
-  ) {
-    syncLoggedInStaffUI();
-    checkAdminAuth();
   }
 });

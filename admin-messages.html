@@ -43,11 +43,7 @@
     <script>
       (function () {
         try {
-          var a =
-            sessionStorage.getItem("mzhl-admin-auth") === "1" ||
-            localStorage.getItem("mzhl-admin-auth") === "1" ||
-            sessionStorage.getItem("mzhl-auth") === "1" ||
-            localStorage.getItem("mzhl-auth") === "1";
+          var a = sessionStorage.getItem("mzhl-admin-auth") === "1";
           if (!a) {
             window.location.replace("admin-login.html");
           }

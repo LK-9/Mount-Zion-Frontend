@@ -37,11 +37,7 @@
           if (t === "dark") {
             document.documentElement.classList.add("dark");
           }
-          var isAuth =
-            sessionStorage.getItem("mzhl-admin-auth") === "1" ||
-            localStorage.getItem("mzhl-admin-auth") === "1" ||
-            sessionStorage.getItem("mzhl-auth") === "1" ||
-            localStorage.getItem("mzhl-auth") === "1";
+          var isAuth = sessionStorage.getItem("mzhl-admin-auth") === "1";
           if (!isAuth) {
             window.location.replace("admin-login.html");
           }
